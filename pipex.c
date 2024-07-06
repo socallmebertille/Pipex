@@ -48,7 +48,6 @@ void	execute_cmd(char **path, char **cmd, char **envp)
 		free(correct_path);
 		i++;
 	}
-	printf("%d\n", env);
 }
 
 int	main(int ac, char **av, char **envp)
@@ -61,10 +60,8 @@ int	main(int ac, char **av, char **envp)
 	int		pid;
 	int		fds[2];
 
-	(void)ac;
-	// if (ac != 5)
-	// 	return (0);
-
+	if (ac != 5)
+		return (0);
 	fd1 = open(av[1], O_RDONLY);
 	fd2 = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0640);
 	if (fd1 == -1)
@@ -86,12 +83,18 @@ int	main(int ac, char **av, char **envp)
 	{
 		dup2(fd1, STDIN_FILENO);
 		close(fd1);
+		dup2(fds[1], STDOUT_FILENO);
+		close(fds[1]);
+		close(fds[0]);
 		execute_cmd(path, cmd1, envp);
 	}
 	else //parent_process
 	{
-		dup2(fd2, STDOUT_FILENO);
+		dup2(fd2, 1);
 		close(fd2);
+		dup2(fds[0], STDIN_FILENO);
+		close(fds[0]);
+		close(fds[1]);
 		execute_cmd(path, cmd2, envp);
 	}
 	free(cmd1);
