@@ -1,31 +1,36 @@
 NAME = pipex
 CC = cc
-FLAGS = -g3 -Wall -Wextra -Werror -I./libft
-LDFLAGS = -Llibft -lft
-SRCS = pipex.c
+FLAGS = -g3 -Wall -Wextra -Werror
+SRCS = pipex.c pipex_utils_1.c pipex_utils_2.c  pipex_utils_3.c
 
-GREEN = \033[0;32m
-RESET = \033[0m
+GREEN = \033[1;32m
+RED = \033[1;31m
+YELLOW = \033[1;33m
+ORANGE = \033[38;5;214m
+PURPLE = \033[1;35m
+BOLD := \033[1m
+RESET = \033[0m 
 
-SUCCESS = ✔
-CLEAN = 🧹
-REMOVE = 🗑️
+SUCCESS = [✔]
+ERROR = [✗]
+CLEAN = [♻]
+REMOVE = [🗑]
+REDO = [🗘]
 
 all: ${NAME}
 
 ${NAME}: ${SRCS}
-	@make -s -C libft
-	@${CC} ${FLAGS} ${SRCS} ${LDFLAGS} -o ${NAME}
-	@echo "${GREEN} ============ ${SUCCESS} Compilation réussie ! ============ ${RESET}"
+	@${CC} ${FLAGS} ${SRCS} -o ${NAME} || (echo "\n${RED} ============ ${ERROR} Compilation failed ! ============ ${NC}\n"; exit 1)
+	@echo "${GREEN} ============ ${SUCCESS} Successful compilation ! ============ ${RESET}"
 
 clean:
-	@make clean -s -C libft
-	@echo "${GREEN} ============ ${CLEAN} Nettoyage binaire réussie ! ============ ${RESET}"
+	@echo "${YELLOW} ============ ${CLEAN} Successful binary cleaning ! ============ ${RESET}"
 
 fclean: clean
 	@rm -f ${NAME}
-	@echo "${GREEN} ============ ${REMOVE}  Exécutable supprimé ! ============ ${RESET}"
+	@echo "${BOLD}${ORANGE} ============ ${REMOVE} Deleted executable ! ============ ${RESET}"
 
 re: fclean all
+	@echo "${PURPLE} ============ ${REDO} Redo completed ! ============ ${RESET}"
 
 .PHONY: all clean fclean re

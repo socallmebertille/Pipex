@@ -1,7 +1,16 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <libft.h>
-#include <fcntl.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipex.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/07 16:25:47 by saberton          #+#    #+#             */
+/*   Updated: 2024/07/07 17:17:53 by saberton         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "pipex.h"
 
 static char	**find_path(char **envp)
 {
@@ -22,8 +31,8 @@ static char	**find_path(char **envp)
 				j++;
 			if (!find[j])
 			{
-
-				len = ft_strlen(envp[i] + j) - ft_strlen(ft_strchr(envp[i] + j, ':'));
+				len = ft_strlen(envp[i] + j) - 
+					ft_strlen(ft_strchr(envp[i] + j, ':'));
 				path = ft_split(envp[i] + j, ':');
 			}
 		}
@@ -32,7 +41,7 @@ static char	**find_path(char **envp)
 	return (path);
 }
 
-void	execute_cmd(char **path, char **cmd, char **envp)
+static void	execute_cmd(char **path, char **cmd, char **envp)
 {
 	char	*correct_path;
 	int		env;
