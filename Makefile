@@ -1,6 +1,6 @@
 NAME = pipex
 CC = cc
-FLAGS = -g3 -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror
 SRCS = pipex.c pipex_utils_1.c pipex_utils_2.c  pipex_utils_3.c
 
 GREEN = \033[1;32m

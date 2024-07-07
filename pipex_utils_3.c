@@ -6,7 +6,7 @@
 /*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 16:37:14 by saberton          #+#    #+#             */
-/*   Updated: 2024/07/07 17:17:15 by saberton         ###   ########.fr       */
+/*   Updated: 2024/07/07 22:53:56 by saberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,7 @@ char	**ft_split(char const *s, char c)
 	len = ft_count(s, c);
 	tab = (char **)malloc(sizeof(char *) * (len + 1));
 	if (!tab)
-	{
 		return (NULL);
-	}
 	tab = ft_tab(s, c, tab, 0);
 	if (!tab)
 		return (NULL);

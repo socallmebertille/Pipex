@@ -6,7 +6,7 @@
 /*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 16:25:47 by saberton          #+#    #+#             */
-/*   Updated: 2024/07/07 18:27:26 by saberton         ###   ########.fr       */
+/*   Updated: 2024/07/07 23:51:07 by saberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,15 +57,38 @@ static void	execute_cmd(char **path, char **cmd, char **envp)
 		free(correct_path);
 		i++;
 	}
+	env = execve(cmd[0], cmd, envp);
+	if (env == -1)
+	{
+		ft_putstr_fd("zsh: command not found: ", 2);
+		ft_putstr_fd(cmd[0], 2);
+		ft_putstr_fd("\n", 2);
+		exit(127);
+	}
 }
 
 static char	**split_cmd(char **av, int i)
 {
 	char	**cmd;
 
-	cmd = ft_split(av[i], ' ');
+	if (ft_strchr(av[i], ' ') == NULL)
+	{
+		cmd = (char **)malloc(sizeof(char *) * 1);
+		cmd[0] = ft_substr(av[i], 0, ft_strlen(av[i]));
+		return (cmd);
+	}
+	cmd = (char **)malloc(sizeof(char *) * 2);
 	if (cmd == NULL)
 		return (NULL);
+	cmd[1] = ft_strchr(av[i], ' ');
+	cmd[0] = ft_substr(av[i], 0, ft_strlen(av[i]) - ft_strlen(cmd[1]));
+	while (cmd[1][0] == ' ')
+		cmd[1] = ft_substr(cmd[1], 1, ft_strlen(cmd[1]) - 1);
+	if (cmd[1][0] == 34)
+		cmd[1] = ft_substr(cmd[1], 1, ft_strlen(cmd[1]) - 2);
+	else if (cmd[1][0] == 39)
+		cmd[1] = ft_substr(cmd[1], 1, ft_strlen(cmd[1]) - 2);
+	// printf("cmd [%s] flag [%s]\n", cmd[0], cmd[1]);
 	return (cmd);
 }
 
@@ -99,6 +122,8 @@ static int	parent_process(char **av, int *fds, int pid, int ac)
 	int	fd2;
 
 	fd2 = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0640);
+	if (fd2 == -1)
+		exit(127);
 	if (pid != 0)
 	{
 		dup2(fd2, STDOUT_FILENO);
@@ -123,7 +148,7 @@ int	main(int ac, char **av, char **envp)
 	int		fds[2];
 
 	if (ac < 5)
-		return (0);
+		exit(127);
 	path = find_path(envp);
 	pipe(fds);
 	pid = fork();
