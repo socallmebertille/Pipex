@@ -6,7 +6,7 @@
 /*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 16:25:47 by saberton          #+#    #+#             */
-/*   Updated: 2024/07/07 17:17:53 by saberton         ###   ########.fr       */
+/*   Updated: 2024/07/07 18:27:26 by saberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ static char	**find_path(char **envp)
 				j++;
 			if (!find[j])
 			{
-				len = ft_strlen(envp[i] + j) - 
-					ft_strlen(ft_strchr(envp[i] + j, ':'));
+				len = ft_strlen(envp[i] + j);
+				len -= ft_strlen(ft_strchr(envp[i] + j, ':'));
 				path = ft_split(envp[i] + j, ':');
 			}
 		}
@@ -59,52 +59,91 @@ static void	execute_cmd(char **path, char **cmd, char **envp)
 	}
 }
 
-int	main(int ac, char **av, char **envp)
+static char	**split_cmd(char **av, int i)
 {
-	char	**cmd1;
-	char	**cmd2;
-	char	**path;
-	int		fd1;
-	int		fd2;
-	int		pid;
-	int		fds[2];
+	char	**cmd;
 
-	if (ac != 5)
-		return (0);
-	fd1 = open(av[1], O_RDONLY);
-	fd2 = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0640);
-	if (fd1 == -1)
+	cmd = ft_split(av[i], ' ');
+	if (cmd == NULL)
+		return (NULL);
+	return (cmd);
+}
+
+static int	child_process(char **av, int *fds, int pid, int i)
+{
+	int	fd1;
+
+	fd1 = open(av[i - 1], O_RDONLY);
+	if (fd1 == -1 && (i - 1) == 1)
 	{
 		close(fd1);
 		ft_putstr_fd("zsh: no such file or directory: ", 2);
 		ft_putstr_fd(av[1], 2);
 		ft_putstr_fd("\n", 2);
-		ft_putstr_fd("0\n", fd2);
-		close(fd2);
-		return (0);
+		return (-1);
 	}
-	cmd1 = ft_split(av[2], ' ');
-	cmd2 = ft_split(av[3], ' ');
-	path = find_path(envp);
-	pipe(fds);
-	pid = fork();
-	if (pid == 0) //child_process
+	if (pid == 0)
 	{
 		dup2(fd1, STDIN_FILENO);
 		close(fd1);
 		dup2(fds[1], STDOUT_FILENO);
 		close(fds[1]);
 		close(fds[0]);
-		execute_cmd(path, cmd1, envp);
+		return (1);
 	}
-	else //parent_process
+	return (0);
+}
+
+static int	parent_process(char **av, int *fds, int pid, int ac)
+{
+	int	fd2;
+
+	fd2 = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0640);
+	if (pid != 0)
 	{
-		dup2(fd2, 1);
+		dup2(fd2, STDOUT_FILENO);
 		close(fd2);
 		dup2(fds[0], STDIN_FILENO);
 		close(fds[0]);
 		close(fds[1]);
-		execute_cmd(path, cmd2, envp);
+		return (1);
+	}
+	ft_putstr_fd("0\n", fd2);
+	close(fd2);
+	return (0);
+}
+
+int	main(int ac, char **av, char **envp)
+{
+	char	**cmd1;
+	char	**cmd2;
+	char	**path;
+	int		i;
+	int		pid;
+	int		fds[2];
+
+	if (ac < 5)
+		return (0);
+	path = find_path(envp);
+	pipe(fds);
+	pid = fork();
+	i = 2;
+	while (i < ac - 1)
+	{
+		cmd1 = split_cmd(av, i);
+		cmd2 = split_cmd(av, i + 1);
+		if (child_process(av, fds, pid, i) == 1)
+			execute_cmd(path, cmd1, envp);
+		else if (child_process(av, fds, pid, i) == -1)
+			return (parent_process(av, fds, 0, ac));
+		if (parent_process(av, fds, pid, ac) == 1 && (i + 1) == (ac - 2))
+			execute_cmd(path, cmd2, envp);
+		else if ((i + 1) != ac - 2)
+		{
+			pipe(fds);
+			pid = fork();
+		}
+		i++;
 	}
 	free(cmd1);
 	free(cmd2);
