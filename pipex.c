@@ -6,7 +6,7 @@
 /*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 16:25:47 by saberton          #+#    #+#             */
-/*   Updated: 2024/07/07 23:51:07 by saberton         ###   ########.fr       */
+/*   Updated: 2024/07/09 23:00:03 by saberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,38 @@ static void	execute_cmd(char **path, char **cmd, char **envp)
 	}
 }
 
+static int	check_av(char **av, int i)
+{
+	int	j;
+	int	len;
+
+	len = ft_strlen(av[i]);
+	if (av[i][0] == '.' && av[i][1] == '/' && av[i][len - 3] == '.'
+		&& av[i][len - 2] == 's' && av[i][len - 1] == 'h')
+	{
+		if (ft_strchr(av[i], ' ') != NULL)
+		{
+			ft_putstr_fd("/bin/sh: 1: ", 2);
+			j = 0;
+			while (av[i][j] != ' ')
+				ft_putchar_fd(av[i][j++], 2);
+			ft_putstr_fd(": not found\n", 2);
+			return (0);
+		}
+		if (access(av[i], W_OK) == -1)
+			return (0);
+		if (access(av[i], W_OK) == -1)
+			return (1);
+	}
+	return (1);
+}
+
 static char	**split_cmd(char **av, int i)
 {
 	char	**cmd;
 
+	if (check_av(av, i) == 0)
+		return (NULL);
 	if (ft_strchr(av[i], ' ') == NULL)
 	{
 		cmd = (char **)malloc(sizeof(char *) * 1);
@@ -97,7 +125,7 @@ static int	child_process(char **av, int *fds, int pid, int i)
 	int	fd1;
 
 	fd1 = open(av[i - 1], O_RDONLY);
-	if (fd1 == -1 && (i - 1) == 1)
+	if (fd1 == -1)
 	{
 		close(fd1);
 		ft_putstr_fd("zsh: no such file or directory: ", 2);
@@ -121,9 +149,11 @@ static int	parent_process(char **av, int *fds, int pid, int ac)
 {
 	int	fd2;
 
-	fd2 = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0640);
+	fd2 = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd2 == -1)
-		exit(127);
+		exit(2);
+	if (access(av[ac - 1], W_OK) == -1)
+		exit(126);
 	if (pid != 0)
 	{
 		dup2(fd2, STDOUT_FILENO);
@@ -159,8 +189,8 @@ int	main(int ac, char **av, char **envp)
 		cmd2 = split_cmd(av, i + 1);
 		if (child_process(av, fds, pid, i) == 1)
 			execute_cmd(path, cmd1, envp);
-		else if (child_process(av, fds, pid, i) == -1)
-			return (parent_process(av, fds, 0, ac));
+		if (!cmd2 && access(av[i + 1], X_OK) == -1)
+			exit(126);
 		if (parent_process(av, fds, pid, ac) == 1 && (i + 1) == (ac - 2))
 			execute_cmd(path, cmd2, envp);
 		else if ((i + 1) != ac - 2)
