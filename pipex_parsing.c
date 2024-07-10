@@ -1,30 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_utils_1.c                                    :+:      :+:    :+:   */
+/*   pipex_parsing.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/07 16:25:38 by saberton          #+#    #+#             */
-/*   Updated: 2024/07/10 20:01:22 by saberton         ###   ########.fr       */
+/*   Created: 2024/07/07 16:30:56 by saberton          #+#    #+#             */
+/*   Updated: 2024/07/10 23:39:35 by saberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-void	ft_putchar_fd(char c, int fd)
-{
-	if (fd > -1)
-		write(fd, &c, 1);
-}
-
-void	ft_putstr_fd(char *s, int fd)
-{
-	if (!s)
-		return ;
-	while (*s)
-		ft_putchar_fd(*s++, fd);
-}
 
 size_t	ft_strlen(const char *s)
 {
@@ -70,4 +56,48 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		join[i++] = *s2++;
 	join[i] = '\0';
 	return (join);
+}
+
+char	*ft_strdup(const char *s)
+{
+	char	*dup;
+	int		i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	dup = (char *)malloc(sizeof(char) * (i + 1));
+	if (!dup)
+		return (NULL);
+	i = 0;
+	while (s[i])
+	{
+		dup[i] = s[i];
+		i++;
+	}
+	dup[i] = '\0';
+	return (dup);
+}
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	char	*sub;
+	size_t	i;
+	size_t	lens;
+
+	i = 0;
+	if (!s)
+		return (NULL);
+	lens = ft_strlen(s);
+	if (start >= lens)
+		return (ft_strdup(""));
+	if (len > lens - start)
+		len = lens - start;
+	sub = (char *)malloc(sizeof(char) * (len + 1));
+	if (!sub)
+		return (NULL);
+	while (s[start] != '\0' && i < len && len != 0)
+		sub[i++] = s[start++];
+	sub[i] = '\0';
+	return (sub);
 }

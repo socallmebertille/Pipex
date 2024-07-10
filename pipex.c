@@ -6,88 +6,13 @@
 /*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 16:25:47 by saberton          #+#    #+#             */
-/*   Updated: 2024/07/10 20:19:59 by saberton         ###   ########.fr       */
+/*   Updated: 2024/07/10 23:54:02 by saberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static char	**find_path(char **envp)
-{
-	int		i;
-	int		j;
-	int		len;
-	char	*find;
-	char	**path;
-
-	i = 0;
-	find = "PATH=";
-	while (envp[i])
-	{
-		j = 0;
-		if (envp[i][j] == find[j])
-		{
-			while (envp[i][j] == find[j] && find[j])
-				j++;
-			len = ft_strlen(envp[i] + j);
-			len -= ft_strlen(ft_strchr(envp[i] + j, ':'));
-			if (len <= 0 && !find[j])
-				path = ft_split(envp[i] + j, '.');
-			else if (len > 0 && !find[j])
-				path = ft_split(envp[i] + j, ':');
-		}
-		i++;
-	}
-	return (path);
-}
-
-static int	check_av(char **av, int i)
-{
-	int	j;
-	int	len;
-
-	len = ft_strlen(av[i]);
-	// if (av[i][0] == '.' && av[i][1] == '/' && av[i][len - 3] == '.'
-	// 	&& av[i][len - 2] == 's' && av[i][len - 1] == 'h')
-	// {
-	// 	if (ft_strchr(av[i], ' ') != NULL)
-	// 	{
-	// 		ft_putstr_fd("/bin/sh: 1: ", 2);
-	// 		j = 0;
-	// 		while (av[i][j] != ' ')
-	// 			ft_putchar_fd(av[i][j++], 2);
-	// 		ft_putstr_fd(": not found\n", 2);
-	// 		return (0);
-	// 	}
-	// 	if (access(av[i], W_OK) == -1)
-	// 		return (0);
-	// 	if (access(av[i], X_OK) == -1)
-	// 		return (-1);
-	// 	return (2);
-	// }
-	if (av[i][len - 3] == '.' && av[i][len - 2] == 's' && av[i][len - 1] == 'h')
-	{
-		if (av[i][0] != '.' && av[i][1] != '/')
-			return (3);
-		if (ft_strchr(av[i], ' ') != NULL)
-		{
-			ft_putstr_fd("/bin/sh: 1: ", 2);
-			j = 0;
-			while (av[i][j] != ' ')
-				ft_putchar_fd(av[i][j++], 2);
-			ft_putstr_fd(": not found\n", 2);
-			return (0);
-		}
-		if (access(av[i], W_OK) == -1)
-			return (0);
-		if (access(av[i], X_OK) == -1)
-			return (-1);
-		return (2);
-	}
-	return (1);
-}
-
-static void	execute_cmd(char **path, char **cmd, char **envp)
+void	execute_cmd(char **path, char **cmd, char **envp)
 {
 	char	*correct_path;
 	int		env;
@@ -104,7 +29,7 @@ static void	execute_cmd(char **path, char **cmd, char **envp)
 		i++;
 	}
 	env = execve(cmd[0], cmd, envp);
-	if (env == -1) // || check_av(cmd, 0) == 3)
+	if (env == -1)
 	{
 		ft_putstr_fd("zsh: command not found: ", 2);
 		ft_putstr_fd(cmd[0], 2);
@@ -115,34 +40,7 @@ static void	execute_cmd(char **path, char **cmd, char **envp)
 	}
 }
 
-static char	**split_cmd(char **av, int i)
-{
-	char	**cmd;
-
-	if (check_av(av, i) == 0)
-		return (NULL);
-	if (ft_strchr(av[i], ' ') == NULL)
-	{
-		cmd = (char **)malloc(sizeof(char *) * 1);
-		cmd[0] = ft_substr(av[i], 0, ft_strlen(av[i]));
-		return (cmd);
-	}
-	cmd = (char **)malloc(sizeof(char *) * 2);
-	if (cmd == NULL)
-		return (NULL);
-	cmd[1] = ft_strchr(av[i], ' ');
-	cmd[0] = ft_substr(av[i], 0, ft_strlen(av[i]) - ft_strlen(cmd[1]));
-	while (cmd[1][0] == ' ')
-		cmd[1] = ft_substr(cmd[1], 1, ft_strlen(cmd[1]) - 1);
-	if (cmd[1][0] == 34)
-		cmd[1] = ft_substr(cmd[1], 1, ft_strlen(cmd[1]) - 2);
-	else if (cmd[1][0] == 39)
-		cmd[1] = ft_substr(cmd[1], 1, ft_strlen(cmd[1]) - 2);
-	// printf("cmd [%s] flag [%s]\n", cmd[0], cmd[1]);
-	return (cmd);
-}
-
-static int	child_process(char **av, int *fds, int pid, int i)
+int	child_process(char **av, int *fds, int pid, int i)
 {
 	int	fd1;
 
@@ -167,7 +65,7 @@ static int	child_process(char **av, int *fds, int pid, int i)
 	return (0);
 }
 
-static int	parent_process(char **av, int *fds, int pid, int ac)
+int	parent_process(char **av, int *fds, int pid, int ac)
 {
 	int	fd2;
 
@@ -202,11 +100,6 @@ int	main(int ac, char **av, char **envp)
 	if (ac < 5)
 		exit(127);
 	path = find_path(envp);
-	// for (int j = 0 ; path[j] ; j++)
-	// {
-	// 	path[j] = "";
-	// 	printf("path [%s]\n", path[j]);
-	// }
 	pipe(fds);
 	pid = fork();
 	i = 2;
@@ -214,15 +107,11 @@ int	main(int ac, char **av, char **envp)
 	{
 		cmd1 = split_cmd(av, i);
 		cmd2 = split_cmd(av, i + 1);
-		// printf("cmd1 [%s] cmd2 [%s]\n", cmd1[0], cmd2[0]);
 		if (check_av(av, i + 1) == 3)
 		{
 			execute_cmd(path, cmd2, envp);
 			return (0);
 		}
-		// 	path[0] = "/usr/local";
-		// for (int j = 0 ; path[j] ; j++)
-		// 	printf("path [%s]\n", path[j]);
 		if (child_process(av, fds, pid, i) == 1)
 			execute_cmd(path, cmd1, envp);
 		if (parent_process(av, fds, pid, ac) == 1 && (i + 1) == (ac - 2))
@@ -234,7 +123,6 @@ int	main(int ac, char **av, char **envp)
 		}
 		i++;
 	}
-	// PATH=/home/saberton/.local/funcheck/host:/home/saberton/bin:/home/saberton/.local/funcheck/host:/home/saberton/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 	free(cmd1);
 	free(cmd2);
 	return (1);

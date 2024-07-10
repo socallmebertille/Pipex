@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_utils_3.c                                    :+:      :+:    :+:   */
+/*   pipex_split.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/07 16:37:14 by saberton          #+#    #+#             */
-/*   Updated: 2024/07/07 22:53:56 by saberton         ###   ########.fr       */
+/*   Created: 2024/07/10 23:54:57 by saberton          #+#    #+#             */
+/*   Updated: 2024/07/10 23:56:25 by saberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,9 @@ char	**ft_split(char const *s, char c)
 	len = ft_count(s, c);
 	tab = (char **)malloc(sizeof(char *) * (len + 1));
 	if (!tab)
+	{
 		return (NULL);
+	}
 	tab = ft_tab(s, c, tab, 0);
 	if (!tab)
 		return (NULL);

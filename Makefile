@@ -1,7 +1,7 @@
 NAME = pipex
 CC = cc
 FLAGS = -Wall -Wextra -Werror
-SRCS = pipex.c pipex_utils_1.c pipex_utils_2.c  pipex_utils_3.c
+SRCS = pipex.c pipex_utils.c pipex_write.c  pipex_parsing.c pipex_split.c
 
 GREEN = \033[1;32m
 RED = \033[1;31m
