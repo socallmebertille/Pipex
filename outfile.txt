@@ -1,4 +1,5 @@
-#!/bin/bash
-
-#You should not be able to execute this script
-ls -la "$HOME"
+Teste file with stuff inside
+That does nothing
+And also have some lines
+Some more text
+Some more text
