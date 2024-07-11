@@ -6,7 +6,7 @@
 /*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 23:40:22 by saberton          #+#    #+#             */
-/*   Updated: 2024/07/10 23:54:10 by saberton         ###   ########.fr       */
+/*   Updated: 2024/07/11 19:40:22 by saberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,23 +43,15 @@ char	**find_path(char **envp)
 
 int	check_av(char **av, int i)
 {
-	int	j;
 	int	len;
 
 	len = ft_strlen(av[i]);
 	if (av[i][len - 3] == '.' && av[i][len - 2] == 's' && av[i][len - 1] == 'h')
 	{
 		if (av[i][0] != '.' && av[i][1] != '/')
-			return (3);
+			return (-3);
 		if (ft_strchr(av[i], ' ') != NULL)
-		{
-			ft_putstr_fd("/bin/sh: 1: ", 2);
-			j = 0;
-			while (av[i][j] != ' ')
-				ft_putchar_fd(av[i][j++], 2);
-			ft_putstr_fd(": not found\n", 2);
-			return (0);
-		}
+			return (-2);
 		if (access(av[i], W_OK) == -1)
 			return (0);
 		if (access(av[i], X_OK) == -1)
@@ -95,18 +87,27 @@ char	**split_cmd(char **av, int i)
 	return (cmd);
 }
 
-// int    get_pipex(int ac, char **av, int i, int *fds, int pid)
-// {
-// 	char	**cmd1;
-// 	char	**cmd2;
+void	get_pipex(int ac, char **av, int i, char **envp)
+{
+	char	**cmd1;
+	char	**cmd2;
+	char	**path;
+	int		pid;
+	int		fds[2];
 
-// 	cmd1 = split_cmd(av, i);
-// 	cmd2 = split_cmd(av, i + 1);
-// 	if (check_av(av, i + 1) == 3)
-// 		return (3);
-// 	if (child_process(av, fds, pid, i) == 1)
-// 		return (1);
-// 	if (parent_process(av, fds, pid, ac) == 1 && (i + 1) == (ac - 2))
-// 		return (2);
-// 	return (0);
-// }
+	pipe(fds);
+	pid = fork();
+	path = find_path(envp);
+	cmd1 = split_cmd(av, i);
+	cmd2 = split_cmd(av, i + 1);
+	if (check_av(av, i) == -2)
+	{
+		script_error(av, i, -2);
+		if (child_process(av, fds, pid, i) == 1)
+			execute_cmd(path, cmd2, envp);
+	}
+	else if (child_process(av, fds, pid, i) == 1)
+		execute_cmd(path, cmd1, envp);
+	if (parent_process(av, fds, pid, ac) == 1 && (i + 1) == (ac - 2))
+		execute_cmd(path, cmd2, envp);
+}

@@ -6,7 +6,7 @@
 /*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 16:25:47 by saberton          #+#    #+#             */
-/*   Updated: 2024/07/10 23:54:02 by saberton         ###   ########.fr       */
+/*   Updated: 2024/07/11 19:40:47 by saberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,11 @@ int	parent_process(char **av, int *fds, int pid, int ac)
 	fd2 = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd2 == -1)
 		exit(2);
+	if (pid == -3)
+	{
+		close(fd2);
+		exit (0);
+	}
 	if (access(av[ac - 1], W_OK) == -1)
 		exit(126);
 	if (pid != 0)
@@ -88,42 +93,46 @@ int	parent_process(char **av, int *fds, int pid, int ac)
 	return (0);
 }
 
+void	script_error(char **av, int i, int check)
+{
+	int	j;
+
+	if (check > -2)
+		return ;
+	j = ft_strlen(ft_strchr(av[i], ' '));
+	if (j != 0)
+	{
+		ft_putstr_fd("/bin/sh: 1: ", 2);
+		ft_putstr_fd(ft_substr(av[i], 0, j), 2);
+		ft_putstr_fd(": not found\n", 2);
+	}
+	else
+	{
+		ft_putstr_fd("/bin/sh: 1: ", 2);
+		ft_putstr_fd(av[i], 2);
+		ft_putstr_fd(": not found\n", 2);
+	}
+}
+
 int	main(int ac, char **av, char **envp)
 {
-	char	**cmd1;
-	char	**cmd2;
-	char	**path;
 	int		i;
-	int		pid;
 	int		fds[2];
 
 	if (ac < 5)
 		exit(127);
-	path = find_path(envp);
-	pipe(fds);
-	pid = fork();
 	i = 2;
+	if (check_av(av, i + 1) == -3)
+	{
+		script_error(av, i + 1, -3);
+		return (parent_process(av, fds, -3, ac));
+	}
 	while (i < ac - 1)
 	{
-		cmd1 = split_cmd(av, i);
-		cmd2 = split_cmd(av, i + 1);
-		if (check_av(av, i + 1) == 3)
-		{
-			execute_cmd(path, cmd2, envp);
-			return (0);
-		}
-		if (child_process(av, fds, pid, i) == 1)
-			execute_cmd(path, cmd1, envp);
-		if (parent_process(av, fds, pid, ac) == 1 && (i + 1) == (ac - 2))
-			execute_cmd(path, cmd2, envp);
-		else if ((i + 1) != ac - 2)
-		{
-			pipe(fds);
-			pid = fork();
-		}
+		get_pipex(ac, av, i, envp);
+		if ((i + 1) != ac - 2)
+			get_pipex(ac, av, i, envp);
 		i++;
 	}
-	free(cmd1);
-	free(cmd2);
 	return (1);
 }

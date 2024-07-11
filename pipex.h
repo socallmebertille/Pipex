@@ -6,7 +6,7 @@
 /*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 16:26:01 by saberton          #+#    #+#             */
-/*   Updated: 2024/07/10 23:53:47 by saberton         ###   ########.fr       */
+/*   Updated: 2024/07/11 19:39:59 by saberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 void	ft_putchar_fd(char c, int fd);
 void	ft_putstr_fd(char *s, int fd);
 void	execute_cmd(char **path, char **cmd, char **envp);
+void	script_error(char **av, int i, int check);
+void	get_pipex(int ac, char **av, int i, char **envp);
 int		check_av(char **av, int i);
 int		child_process(char **av, int *fds, int pid, int i);
 int		parent_process(char **av, int *fds, int pid, int ac);
