@@ -1,25 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_utils.c                                      :+:      :+:    :+:   */
+/*   pipex_utils_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/10 23:40:22 by saberton          #+#    #+#             */
-/*   Updated: 2024/07/13 07:02:17 by saberton         ###   ########.fr       */
+/*   Created: 2024/07/12 14:36:14 by saberton          #+#    #+#             */
+/*   Updated: 2024/07/12 14:37:51 by saberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
-char	**find_path(char **envp, int i)
+char	**find_path(char **envp)
 {
+	int		i;
 	int		j;
 	int		len;
 	char	*find;
 	char	**path;
 
-	path = NULL;
+	i = 0;
 	find = "PATH=";
 	while (envp[i])
 	{
@@ -31,11 +32,9 @@ char	**find_path(char **envp, int i)
 			len = ft_strlen(envp[i] + j);
 			len -= ft_strlen(ft_strchr(envp[i] + j, ':'));
 			if (len <= 0 && !find[j])
-				path = ft_split(envp[i] + j, '.', path);
+				path = ft_split(envp[i] + j, '.');
 			else if (len > 0 && !find[j])
-				path = ft_split(envp[i] + j, ':', path);
-			// if (!path)
-			// 	return (NULL);
+				path = ft_split(envp[i] + j, ':');
 		}
 		i++;
 	}
@@ -66,7 +65,6 @@ int	check_av(char **av, int i)
 char	**split_cmd(char **av, int i)
 {
 	char	**cmd;
-	char	*sub;
 
 	if (check_av(av, i) == 0)
 		return (NULL);
@@ -77,10 +75,6 @@ char	**split_cmd(char **av, int i)
 			return (NULL);
 		cmd[0] = ft_substr(av[i], 0, ft_strlen(av[i]));
 		cmd[1] = NULL;
-		int j;
-		for (j = 0; cmd[j]; j++)
-			printf("cmd%d [%s][%d]\n", i - 2, cmd[j], j);
-		printf("cmd%d [%s][%d]\n", i - 2, cmd[j], j);
 		return (cmd);
 	}
 	cmd = (char **)malloc(sizeof(char *) * 3);
@@ -88,66 +82,28 @@ char	**split_cmd(char **av, int i)
 		return (NULL);
 	cmd[1] = ft_strchr(av[i], ' ');
 	cmd[0] = ft_substr(av[i], 0, ft_strlen(av[i]) - ft_strlen(cmd[1]));
-	cmd[2] = NULL;
-	if (ft_strchr(cmd[1], 34) == NULL && ft_strchr(cmd[1], 39) == NULL)
-	{
-		free(cmd[0]);
-		cmd = ft_split(av[i], ' ', cmd);
-		if (!cmd)
-			return (NULL);
-	}
-	if (cmd[1][0] == ' ' && cmd[1][0] && cmd[1])
+	while (cmd[1][0] == ' ')
 		cmd[1] = ft_substr(cmd[1], 1, ft_strlen(cmd[1]) - 1);
-	if (!cmd[1])
-		return (NULL);
-	while(cmd[1][0] == ' ' && cmd[1][0] && cmd[1])
-	{
-		sub = cmd[1];
-		cmd[1] = ft_substr(sub, 1, ft_strlen(sub) - 1);
-		free(sub);
-		if (!cmd[1])
-			return (NULL);
-	}
-	if ((cmd[1][0] == 34 || cmd[1][0] == 39) && cmd[1])
-	{
-		sub = cmd[1];
-		cmd[1] = ft_substr(sub, 1, ft_strlen(sub) - 2);
-		free(sub);
-		if (!cmd[1])
-			return (NULL);
-	}
-	int j;
-	for (j = 0; cmd[j]; j++)
-		printf("cmd%d [%s][%d]\n", i - 2, cmd[j], j);
-	printf("cmd%d [%s][%d]\n", i - 2, cmd[j], j);
+	if (cmd[1][0] == 34 || cmd[1][0] == 39)
+		cmd[1] = ft_substr(cmd[1], 1, ft_strlen(cmd[1]) - 2);
+	cmd[2] = NULL;
 	return (cmd);
 }
 
 void	free_elem(char **path, char **cmd1, char **cmd2)
 {
-	int	i;
-
-	i = 0;
+	if (*path)
+		free(*path++);
 	if (path)
-	{
-		while (path[i])
-			free(path[i++]);
 		free(path);
-	}
-	i = 0;
+	if (*cmd1)
+		free(*cmd1++);
 	if (cmd1)
-	{
-		while (cmd1[i])
-			free(cmd1[i++]);
 		free(cmd1);
-	}
-	i = 0;
+	if (*cmd2)
+		free(*cmd2++);
 	if (cmd2)
-	{
-		while (cmd2[i])
-			free(cmd2[i++]);
 		free(cmd2);
-	}
 }
 
 void	get_pipex(int ac, char **av, int i, char **envp)
@@ -156,66 +112,23 @@ void	get_pipex(int ac, char **av, int i, char **envp)
 	char	**cmd2;
 	char	**path;
 	int		pid;
-	int		exe;
 	int		fds[2];
 
 	pipe(fds);
-	//if (pipe(fds));
-	// {
-	// 	close(fds[0]);
-	// 	close(fds[1]);
-	// 	exit(EXIT_FAILURE);
-	// }
 	pid = fork();
-	// if (pid == -1)
-	// {
-	// 	close(fds[0]);
-	// 	close(fds[1]);
-	// 	exit(EXIT_FAILURE);
-	// }
-	path = find_path(envp, 0);
+	path = find_path(envp);
 	cmd1 = split_cmd(av, i);
 	cmd2 = split_cmd(av, i + 1);
-	if (!path || !cmd1 || !cmd2)
-		return (free_elem(path, cmd1, cmd2));
-	exe = 1;
+	if (!cmd1 || !cmd2 || !path)
+		free_elem(path, cmd1, cmd2);
 	if (check_av(av, i) == -2)
 	{
 		script_error(av, i, -2);
-		if (child_process(av, fds, pid, i) == -1)
-			exe = execute_cmd(path, cmd2, envp);
+		if (child_process(av, fds, pid, i) == 1)
+			execute_cmd(path, cmd2, envp);
 	}
 	else if (child_process(av, fds, pid, i) == 1)
-		exe = execute_cmd(path, cmd1, envp);
-	if (exe == 0)
-	{
-		free_elem(path, cmd1, cmd2);
-		// close(fds[0]);
-		// close(fds[1]);
-		exit (126);
-	}
-	if (exe == -1)
-	{
-		free_elem(path, cmd1, cmd2);
-		// close(fds[0]);
-		// close(fds[1]);
-		exit (127);
-	}
+		execute_cmd(path, cmd1, envp);
 	if (parent_process(av, fds, pid, ac) == 1 && (i + 1) == (ac - 2))
-		exe = execute_cmd(path, cmd2, envp);
-	if (exe == 0)
-	{
-		free_elem(path, cmd1, cmd2);
-		// close(fds[0]);
-		// close(fds[1]);
-		exit (126);
-	}
-	if (exe == -1)
-	{
-		free_elem(path, cmd1, cmd2);
-		// close(fds[0]);
-		// close(fds[1]);
-		exit (127);
-	}
-	free_elem(path, cmd1, cmd2);
+		execute_cmd(path, cmd2, envp);
 }

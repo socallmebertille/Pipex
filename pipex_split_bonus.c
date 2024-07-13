@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_split.c                                      :+:      :+:    :+:   */
+/*   pipex_split_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/10 23:54:57 by saberton          #+#    #+#             */
-/*   Updated: 2024/07/12 19:24:24 by saberton         ###   ########.fr       */
+/*   Created: 2024/07/12 14:36:04 by saberton          #+#    #+#             */
+/*   Updated: 2024/07/12 14:37:46 by saberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 static int	ft_count(const char *str, char c)
 {
@@ -37,7 +37,7 @@ static int	ft_count(const char *str, char c)
 
 static void	free_tab(char **tab, int count)
 {
-	while (count >= 0 && tab[count])
+	while (count >= 0)
 	{
 		free(tab[count]);
 		count--;
@@ -74,28 +74,19 @@ static char	**ft_tab(char const *s, char c, char **tab, int i)
 	return (tab);
 }
 
-static int	ft_len(char **tab)
-{
-	int	i;
-
-	i = 0;
-	while (tab[i])
-		i++;
-	return (i);
-}
-
-char	**ft_split(char const *s, char c, char **tab)
+char	**ft_split(char const *s, char c)
 {
 	int		len;
+	char	**tab;
 
-	if (tab != NULL)
-		free_tab(tab, ft_len(tab));
 	if (!s)
 		return (NULL);
 	len = ft_count(s, c);
 	tab = (char **)malloc(sizeof(char *) * (len + 1));
 	if (!tab)
+	{
 		return (NULL);
+	}
 	tab = ft_tab(s, c, tab, 0);
 	if (!tab)
 		return (NULL);
