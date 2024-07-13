@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_split.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bertille <bertille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 23:54:57 by saberton          #+#    #+#             */
-/*   Updated: 2024/07/12 19:24:24 by saberton         ###   ########.fr       */
+/*   Updated: 2024/07/13 15:50:02 by bertille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ char	**ft_split(char const *s, char c, char **tab)
 		free_tab(tab, ft_len(tab));
 	if (!s)
 		return (NULL);
+	while (*s == ' ')
+		s++;
 	len = ft_count(s, c);
 	tab = (char **)malloc(sizeof(char *) * (len + 1));
 	if (!tab)

@@ -57,3 +57,7 @@
 #TESTS SLEEP
 # test 1
 time ./pipex infile.txt 'sleep 9' 'sleep 5' /dev/stdout
+
+#MY OWEN TESTS
+# ret 51
+./pipex infile.txt 'sed "s/And/But/"' 'grep But' 'wc -c' /dev/stdout

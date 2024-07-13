@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_parsing.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bertille <bertille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 16:30:56 by saberton          #+#    #+#             */
-/*   Updated: 2024/07/13 07:08:31 by saberton         ###   ########.fr       */
+/*   Updated: 2024/07/13 16:33:47 by bertille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,19 +37,25 @@ char	*ft_strchr(const char *s, int c)
 	return ((char *)0);
 }
 
-char	*ft_strcat(char *dest, char *src)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-		int 	i;
-		int 	j;
+	char	*join;
+	size_t	len;
+	size_t	i;
 
-		i = 0;
-		j = 0;
-		while (dest[i] != '\0')
-				i++;
-		while (src[j] != '\0')
-			dest[i++] = src[j++];
-		dest[i] = src[j];
-		return (dest);
+	if (!s1 || !s2)
+		return (NULL);
+	len = ft_strlen(s1) + ft_strlen(s2);
+	join = (char *)malloc(sizeof(char) * (len + 1));
+	if (!join)
+		return (NULL);
+	i = 0;
+	while (*s1 && i < len)
+		join[i++] = *s1++;
+	while (*s2 && i < len)
+		join[i++] = *s2++;
+	join[i] = '\0';
+	return (join);
 }
 
 char	*ft_strdup(const char *s)
