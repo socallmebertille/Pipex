@@ -1,7 +1,7 @@
 NAME = pipex
 CC = cc
 FLAGS = -Wall -Wextra -Werror -g3
-SRCS = pipex.c pipex_utils.c pipex_write.c  pipex_parsing.c pipex_split.c
+SRCS = pipex.c pipex_cmd.c pipex_process.c pipex_exit.c pipex_write.c  pipex_parsing.c pipex_split.c
 OBJS = ${SRCS:.c=.o}
 BONUS_SRCS = pipex_bonus.c pipex_utils_bonus.c pipex_write_bonus.c  pipex_parsing_bonus.c pipex_split_bonus.c
 BONUS_OBJS = ${BONUS_SRCS:.c=.o}

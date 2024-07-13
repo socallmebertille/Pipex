@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bertille <bertille@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 16:26:01 by saberton          #+#    #+#             */
-/*   Updated: 2024/07/13 16:20:51 by bertille         ###   ########.fr       */
+/*   Updated: 2024/07/13 18:57:21 by saberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,10 @@
 
 void	ft_putchar_fd(char c, int fd);
 void	ft_putstr_fd(char *s, int fd);
-int		execute_cmd(char **path, char **cmd, char **envp);
+void	close_fds(int *fds);
 void	script_error(char **av, int i, int check);
+int		execute_error(char **cmd);
+int		execute_cmd(char **path, char **cmd, char **envp);
 void	free_elem(char **path, char **cmd1, char **cmd2);
 void	get_pipex(int ac, char **av, int i, char **envp);
 int		check_av(char **av, int i);
@@ -37,6 +39,7 @@ char	*ft_strdup(const char *s);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	**ft_split(char const *s, char c, char **tab);
 char	**find_path(char **envp, int i);
+char	**split_cmd2(char **av, int i, char **cmd);
 char	**split_cmd(char **av, int i);
 
 #endif
