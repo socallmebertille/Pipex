@@ -6,11 +6,11 @@
 /*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 13:35:24 by saberton          #+#    #+#             */
-/*   Updated: 2024/09/17 15:53:06 by saberton         ###   ########.fr       */
+/*   Updated: 2024/09/18 18:18:41 by saberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "../includes/pipex.h"
 
 static int	ft_count(const char *str, char c)
 {

@@ -120,4 +120,5 @@ for cmd in "${commands[@]}"; do
 done
 
 # Nettoyage des fichiers temporaires
+cd ..
 rm -f true_pipe_out.txt pipex_out.txt true_pipe_err.txt pipex_err.txt

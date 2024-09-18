@@ -6,11 +6,11 @@
 /*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:08:03 by saberton          #+#    #+#             */
-/*   Updated: 2024/09/18 18:08:31 by saberton         ###   ########.fr       */
+/*   Updated: 2024/09/18 18:18:54 by saberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "../includes/pipex.h"
 
 char	**recup_path(char **envp)
 {

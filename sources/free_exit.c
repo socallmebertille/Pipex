@@ -6,11 +6,11 @@
 /*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 13:37:35 by saberton          #+#    #+#             */
-/*   Updated: 2024/09/18 18:04:23 by saberton         ###   ########.fr       */
+/*   Updated: 2024/09/18 18:18:46 by saberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "../includes/pipex.h"
 
 void	ft_free(char **path, char **cmd, char *tmp)
 {

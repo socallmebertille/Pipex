@@ -1,11 +1,11 @@
 NAME = pipex
 CC = cc
-FLAGS = -Wall -Wextra -Werror -g3
-SRCS = utils_libft.c \
-		ft_split.c \
-		free_exit.c \
-		command_parse.c \
-		pipex.c
+FLAGS = -Wall -Wextra -Werror
+SRCS = sources/utils_libft.c \
+		sources/ft_split.c \
+		sources/free_exit.c \
+		sources/command_parse.c \
+		sources/pipex.c
 OBJS = ${SRCS:.c=.o}
 # BONUS_SRCS = pipex_bonus.c
 # BONUS_OBJS = ${BONUS_SRCS:.c=.o}
@@ -26,7 +26,9 @@ REDO = [ 🗘 ]
 
 all: ${NAME}
 
-${NAME}: ${OBJS}
+$(NAME): $(OBJS)
+	@$(CC) $(OBJS) -o $(NAME) || (echo "\n${RED} ============ ${ERROR} Linking failed ! ===================== ${NC}\n"; exit 1)
+	@echo "${GREEN} ============ ${SUCCESS} Binary created ! ====================== ${RESET}"
 
 .c.o:
 	@${CC} ${FLAGS} -c $< -o $@ || (echo "\n${RED} ============ ${ERROR} Compilation failed ! ==================== ${NC}\n"; exit 1)

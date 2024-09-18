@@ -6,11 +6,11 @@
 /*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 17:14:35 by saberton          #+#    #+#             */
-/*   Updated: 2024/09/18 18:08:21 by saberton         ###   ########.fr       */
+/*   Updated: 2024/09/18 18:18:34 by saberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "../includes/pipex.h"
 
 void	exec(char **path, char **envp, char *av)
 {
