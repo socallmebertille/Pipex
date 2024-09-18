@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_split_bonus.c                                :+:      :+:    :+:   */
+/*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/12 14:36:04 by saberton          #+#    #+#             */
-/*   Updated: 2024/07/12 14:37:46 by saberton         ###   ########.fr       */
+/*   Created: 2024/09/17 13:35:24 by saberton          #+#    #+#             */
+/*   Updated: 2024/09/17 15:53:06 by saberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex_bonus.h"
+#include "pipex.h"
 
 static int	ft_count(const char *str, char c)
 {
@@ -37,7 +37,7 @@ static int	ft_count(const char *str, char c)
 
 static void	free_tab(char **tab, int count)
 {
-	while (count >= 0)
+	while (count >= 0 && tab[count])
 	{
 		free(tab[count]);
 		count--;
@@ -84,9 +84,7 @@ char	**ft_split(char const *s, char c)
 	len = ft_count(s, c);
 	tab = (char **)malloc(sizeof(char *) * (len + 1));
 	if (!tab)
-	{
 		return (NULL);
-	}
 	tab = ft_tab(s, c, tab, 0);
 	if (!tab)
 		return (NULL);

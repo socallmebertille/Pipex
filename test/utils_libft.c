@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_parsing.c                                    :+:      :+:    :+:   */
+/*   utils_libft.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bertille <bertille@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/07 16:30:56 by saberton          #+#    #+#             */
-/*   Updated: 2024/07/13 16:33:47 by bertille         ###   ########.fr       */
+/*   Created: 2024/09/17 13:32:33 by saberton          #+#    #+#             */
+/*   Updated: 2024/09/18 18:04:05 by saberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,46 +16,37 @@ size_t	ft_strlen(const char *s)
 {
 	size_t	i;
 
-	if (!s)
-		return (0);
 	i = 0;
 	while (s[i])
 		i++;
 	return (i);
 }
 
-char	*ft_strchr(const char *s, int c)
+char	*ft_strnstr(const char *big, const char *little, size_t len)
 {
-	while (*s)
-	{
-		if (*s == (char)c)
-			return ((char *) s);
-		s++;
-	}
-	if ((char)c == '\0')
-		return ((char *)s);
-	return ((char *)0);
-}
+	unsigned int	i;
+	unsigned int	j;
 
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	char	*join;
-	size_t	len;
-	size_t	i;
-
-	if (!s1 || !s2)
-		return (NULL);
-	len = ft_strlen(s1) + ft_strlen(s2);
-	join = (char *)malloc(sizeof(char) * (len + 1));
-	if (!join)
-		return (NULL);
 	i = 0;
-	while (*s1 && i < len)
-		join[i++] = *s1++;
-	while (*s2 && i < len)
-		join[i++] = *s2++;
-	join[i] = '\0';
-	return (join);
+	if (!big && len == 0)
+		return (NULL);
+	if (little[0] == '\0')
+		return ((char *)big);
+	while (big[i] && i < len)
+	{
+		j = 0;
+		if (little[j] == big[i])
+		{
+			while (little[j] == big[i + j] && i + j < len)
+			{
+				j++;
+				if (!little[j])
+					return ((char *)&big[i]);
+			}
+		}
+		i++;
+	}
+	return (NULL);
 }
 
 char	*ft_strdup(const char *s)
@@ -100,4 +91,25 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		sub[i++] = s[start++];
 	sub[i] = '\0';
 	return (sub);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	char	*join;
+	size_t	len;
+	size_t	i;
+
+	if (!s1 || !s2)
+		return (NULL);
+	len = ft_strlen(s1) + ft_strlen(s2);
+	join = (char *)malloc(sizeof(char) * (len + 1));
+	if (!join)
+		return (NULL);
+	i = 0;
+	while (*s1 && i < len)
+		join[i++] = *s1++;
+	while (*s2 && i < len)
+		join[i++] = *s2++;
+	join[i] = '\0';
+	return (join);
 }

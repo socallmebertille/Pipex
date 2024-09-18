@@ -1,10 +1,14 @@
 NAME = pipex
 CC = cc
 FLAGS = -Wall -Wextra -Werror -g3
-SRCS = pipex.c pipex_cmd.c pipex_process.c pipex_exit.c pipex_write.c  pipex_parsing.c pipex_split.c
+SRCS = utils_libft.c \
+		ft_split.c \
+		free_exit.c \
+		command_parse.c \
+		pipex.c
 OBJS = ${SRCS:.c=.o}
-BONUS_SRCS = pipex_bonus.c pipex_utils_bonus.c pipex_write_bonus.c  pipex_parsing_bonus.c pipex_split_bonus.c
-BONUS_OBJS = ${BONUS_SRCS:.c=.o}
+# BONUS_SRCS = pipex_bonus.c
+# BONUS_OBJS = ${BONUS_SRCS:.c=.o}
 
 GREEN = \033[1;32m
 RED = \033[1;31m
@@ -36,7 +40,7 @@ fclean: clean
 	@rm -rf ${NAME}
 	@echo "${BOLD}${ORANGE} ============ ${REMOVE} Deleted executable ! ==================== ${RESET}"
 
-bonus: ${OBJS} ${BONUS_OBJS}
+# bonus: ${OBJS} ${BONUS_OBJS}
 
 re: fclean all
 	@echo "${PURPLE} ============ ${REDO} Redo completed ! ======================== ${RESET}"
