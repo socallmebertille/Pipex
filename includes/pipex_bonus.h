@@ -1,18 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   pipex_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/14 17:24:33 by saberton          #+#    #+#             */
-/*   Updated: 2024/09/19 13:56:48 by saberton         ###   ########.fr       */
+/*   Created: 2024/09/19 13:56:26 by saberton          #+#    #+#             */
+/*   Updated: 2024/09/19 14:52:53 by saberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#ifndef PIPEX_BONUS_H
+# define PIPEX_BONUS_H
 
+# include "../includes/pipex.h"
 # include <fcntl.h>
 # include <limits.h>
 # include <stdio.h>
@@ -21,9 +22,16 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-void	exec(char **path, char **envp, char *av);
-void	parent_process(char **av, int *fd, char **envp);
-void	child_process(char **av, int *fd, char **envp);
+typedef struct s_pipe
+{
+	int	infile;
+	int	outfile;
+	int	fd[2];
+}		t_pipe;
+
+// void	exec(char **path, char **envp, char *av);
+// void	child_bonus(char **av, int *fd, char **envp, int i);
+// void	parent_bonus(char **av, int *fd, char **envp, int ac);
 void	ft_free(char **path, char **cmd, char *tmp);
 void	free_and_exit(char **path, char **cmd, char *tmp);
 void	error_exit(int *fds, char *av, char **path);
@@ -36,5 +44,10 @@ char	*ft_strjoin(char const *s1, char const *s2);
 char	*valid_cmd(char **path, char *cmd, char *tmp);
 char	**ft_split(char const *s, char c);
 char	**recup_path(char **envp);
+
+void	exec_command(char **av, t_pipe *pipe_info, char **envp, int cmd_idx);
+void	child_bonus(char **av, t_pipe *pipe_info, char **envp, int cmd_idx);
+void	parent_bonus(char **av, t_pipe *pipe_info, char **envp, int ac);
+void	run_pipeline(char **av, char **envp, int ac, int infile);
 
 #endif
