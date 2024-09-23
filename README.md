@@ -133,10 +133,10 @@ L'idee est donc de recuperer chaque commande et ses potentiels flags. On va donc
 <br>
 On veut par exemple obtenir :
 <br>
-| tr |
-| --- |
+| tr  |
+|-----|
 | a-z |
-| --- |
+|-----|
 | A-Z |
 
 <br>
@@ -154,6 +154,9 @@ Pour cela, on commence par recuperer un 3eme argument dans le main, qui correspo
 <br>
 Apres cela, on va aller cherche la string qui commence par "PATH=" et recuperer tout ce qui vient a la suite de cette string. C'est-a-dire qu'on se retrouve avec une suite de plusieurs chemins possibles separes avec ':'. On va donc split ces chemins.
 <br>
-Une fois cela fait, on va tester avec la fonction access chaque string de path potentiel suivi de '/' et de la commande que l'on veut executer (cmd1[0] ou cmd2[0]).
+Une fois cela fait, on va tester avec la fonction access chaque string de path potentiel suivi de '/' et de la commande que l'on veut executer (cmd1[0] ou cmd2[0]). On va ajouter les flags 'F_OK | X_OK' a la fonction access pour verifier l'existence et le droit d'execution de la commande en question.
+<br>
+
+On oublie pas la gestion d'erreur, de free et de close pour ibtenir un programme coherent et correct !
 
 <br>
