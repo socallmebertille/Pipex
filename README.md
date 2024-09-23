@@ -136,7 +136,6 @@ On veut par exemple obtenir :
 | tr  |
 |-----|
 | a-z |
-|-----|
 | A-Z |
 
 <br>
