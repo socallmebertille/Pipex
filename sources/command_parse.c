@@ -6,7 +6,7 @@
 /*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:08:03 by saberton          #+#    #+#             */
-/*   Updated: 2024/09/20 16:58:05 by saberton         ###   ########.fr       */
+/*   Updated: 2024/09/21 18:24:17 by saberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,5 +59,5 @@ char	*valid_cmd(char **path, char *cmd, char *tmp)
 		free(cmd_path);
 		i++;
 	}
-	return (cmd);
+	return (ft_strdup(""));
 }

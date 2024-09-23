@@ -6,7 +6,7 @@
 /*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 17:14:35 by saberton          #+#    #+#             */
-/*   Updated: 2024/09/20 16:58:43 by saberton         ###   ########.fr       */
+/*   Updated: 2024/09/21 18:25:37 by saberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,19 @@ void	exec(char **path, char **envp, char *av)
 
 	cmd = ft_split(av, ' ');
 	tmp = ft_strjoin("/", cmd[0]);
+	if (!tmp || !cmd)
+		return (free_and_exit(path, cmd, tmp));
 	cmd_path = valid_cmd(path, *cmd, tmp);
-	if (!tmp || !cmd || !cmd_path)
+	if (!cmd_path)
 		return (free_and_exit(path, cmd, tmp));
+	if (cmd_path[0] == '\0')
+	{
+		free(cmd_path);
+		cmd_path = ft_strdup(*cmd);
+	}
 	if (execve(cmd_path, cmd, envp) == -1)
-		return (free_and_exit(path, cmd, tmp));
-	return (ft_free(path, cmd, tmp));
+		return (free(cmd_path), free_and_exit(path, cmd, tmp));
+	return (free(cmd_path), ft_free(path, cmd, tmp));
 }
 
 int	open_file(char *av, int id)

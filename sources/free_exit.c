@@ -6,7 +6,7 @@
 /*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 13:37:35 by saberton          #+#    #+#             */
-/*   Updated: 2024/09/18 18:18:46 by saberton         ###   ########.fr       */
+/*   Updated: 2024/09/21 18:13:09 by saberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ void	ft_free(char **path, char **cmd, char *tmp)
 
 void	free_and_exit(char **path, char **cmd, char *tmp)
 {
-	perror(*cmd);
+	if (*cmd && cmd)
+		perror(*cmd);
 	ft_free(path, cmd, tmp);
 	exit(EXIT_FAILURE);
 }
