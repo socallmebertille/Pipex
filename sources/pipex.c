@@ -6,7 +6,7 @@
 /*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 17:14:35 by saberton          #+#    #+#             */
-/*   Updated: 2024/09/21 18:25:37 by saberton         ###   ########.fr       */
+/*   Updated: 2024/10/02 15:38:42 by saberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,18 @@ void	exec(char **path, char **envp, char *av)
 
 	cmd = ft_split(av, ' ');
 	tmp = ft_strjoin("/", cmd[0]);
-	if (!tmp || !cmd)
+	if (!tmp || !cmd || !*cmd)
 		return (free_and_exit(path, cmd, tmp));
 	cmd_path = valid_cmd(path, *cmd, tmp);
 	if (!cmd_path)
 		return (free_and_exit(path, cmd, tmp));
+	// if (*cmd && ft_strlen(*cmd) >= 3 && !ft_strnstr(*cmd + (ft_strlen(*cmd)
+	// 			- 3), ".sh", 3) && ft_strnstr(*cmd, "./", 2) && access(*cmd,
+	// 		F_OK | X_OK) != 0)
+	// 	return (write(2, *cmd + 2, ft_strlen(*cmd) - 2), write(2,
+	// 			": cannot access '", 18), write(2, *cmd, ft_strlen(*cmd)),
+	// 		write(2, "': No such file or directory\n", 30), free(cmd_path),
+	// 		ft_free(path, cmd, tmp), exit(EXIT_FAILURE));
 	if (cmd_path[0] == '\0')
 	{
 		free(cmd_path);

@@ -1,6 +1,6 @@
 NAME = pipex
 CC = cc
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror -g3
 SRCS = sources/utils_libft.c \
 		sources/ft_split.c \
 		sources/free_exit.c \

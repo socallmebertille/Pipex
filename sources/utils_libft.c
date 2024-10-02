@@ -6,7 +6,7 @@
 /*   By: saberton <saberton@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 13:32:33 by saberton          #+#    #+#             */
-/*   Updated: 2024/09/21 15:23:27 by saberton         ###   ########.fr       */
+/*   Updated: 2024/10/02 15:20:27 by saberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,11 @@ char	*ft_strnstr(const char *big, const char *little, size_t len)
 	unsigned int	i;
 	unsigned int	j;
 
-	i = 0;
-	if (!big && len == 0)
+	if (!big || len == 0)
 		return (NULL);
 	if (little[0] == '\0')
 		return ((char *)big);
+	i = 0;
 	while (big[i] && i < len)
 	{
 		j = 0;
