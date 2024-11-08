@@ -2,6 +2,16 @@
 
 <br>
 
+## testeur : fichier test pour pipex sans bonus
+
+<br>
+
+Il suffit de clone le dossier test et de coller ton executable pipex dans le dossier puis de run la commande ./test_pipex.sh.
+
+Il est possible d'adapter le dossier test_bonus pour pipex bonus puisque j'avais commence a le faire. Je n'ai simplement pas acheve la partie bonus de ce projet.
+
+<br>
+
 ## blog : comprendre les fonctions pipe, fork et dup2
 
 <br>
